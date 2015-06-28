@@ -37,20 +37,20 @@
     <div class="reveal">
 
       <div class="slides">
-        <section class="intro" data-transition="zoom">
+        <section id="intro" class="intro" data-transition="zoom">
           <h1>sbt effectively</h1>
           <h3>How to use sbt so your project builds sing</h3>
           <br>
           <h4><a href="https://blog.jaceklaskowski.pl">Jacek Laskowski</a> / <a href="https://twitter.com/jaceklaskowski">@jaceklaskowski</a> / <a href="https://github.com/jaceklaskowski">GitHub</a></h4>
         </section>
 
-        <section data-transition="zoom">
+        <section id="help" data-transition="zoom">
           <h2>Use spacebar to transition between slides.</h2>
           <p class="fragment">Press space to continue.</p>
         </section>
 
         <section>
-          <section>
+          <section id="thehost">
             <p>
               <img width="20%" src="images/jacek_laskowski_20141201_512px.png">
             </p>
@@ -72,11 +72,12 @@
           </section>
         </section>
 
-        <section>
+        <section id="agenda">
           <h2>Agenda</h2>
           <ul>
+            <li><a href="#/core-tenets">Core tenets of sbt</a></li>
             <li><a href="#/sbt-shell">sbt shell</a></li>
-            <li><a href="#/scala-console">Scala console</a></li>
+            <li><a href="#/scala-repl">Scala REPL / console</a></li>
             <li><a href="#/settings">Settings</a></li>
             <li><a href="#/tasks">Tasks</a></li>
             <li><a href="#/projects">Projects</a></li>
@@ -85,13 +86,23 @@
           </ul>
         </section>
 
-        <section data-transition="zoom">
+        <section id="conventions" data-transition="zoom">
           <h2>Conventions</h2>
           <ul>
             <li><code>➜  sbt-scalafortyfives</code> denotes <b>command-line shell</b></li>
             <li><code>[sbt-scalafortyfives]></code> denotes <b>sbt shell</b></li>
             <li><code>scala></code> denotes <b>Scala REPL</b></li>
           </ul>
+        </section>
+
+        <section id="core-tenets">
+          <h2>Core tenets of sbt</h2>
+          <ul>
+            <li>Interaction</li>
+            <li>Automation</li>
+            <li>Integration</li>
+          </ul>
+          <p><small>From <a href="https://www.typesafe.com/blog/preview-of-upcoming-sbt-10-features-read-about-the-new-plugins">Preview of upcoming sbt 1.0 features: Read about the new plugins</a></small></p>
         </section>
 
         <section id="sbt-shell">
@@ -109,9 +120,13 @@ shellPrompt := { state =>
           </code></pre>
         </section>
 
-        <section id="sbt-console">
+        <section id="scala-repl">
+          <h1>Scala REPL</h1>
+          <h4>console command</h4>
+        </section>
+        <section>
           <section>
-            <h2>Scala console</h2>
+            <h2>console = Scala REPL</h2>
             <pre><code data-trim contenteditable class="bash">
 [sbt-scalafortyfives]> console
 [info] Starting scala interpreter...
@@ -203,6 +218,9 @@ scalacOptions += "-feature"
         </section>
 
         <section id="settings">
+          <h1>Settings in sbt</h1>
+        </section>
+        <section>
           <section>
             <h2>Settings / inspect</h2>
             <pre><code data-trim contenteditable class="bash">
@@ -443,6 +461,55 @@ message in b := "message in project B"
 [sbt-scalafortyfives]> show b/message
 [info] message in project B
             </code></pre>
+          </section>
+        </section>
+
+        <section id="plugins">
+          <h1>Plugins in sbt</h1>
+        </section>
+        <section>
+          <section>
+            <h2>Plugins intro</h2>
+            <ul>
+              <li>Plugins are build definition</li>
+              <li>The more you understand sbt, the stronger urge to write few plugins.</li>
+            </ul>
+          </section>
+          <section data-transition="slide-in fade-out">
+            <h2>Global plugins <small>use early and often</small></h2>
+            <p>The plugins work across projects and don't need to be defined per project:</p>
+            <ul>
+              <li><a href="https://github.com/rtimush/sbt-updates">sbt-updates</a></li>
+              <li><a href="https://github.com/jrudolph/sbt-dependency-graph">sbt-dependency-graph</a></li>
+              <li><a href="https://github.com/gilt/sbt-dependency-graph-sugar">sbt-dependency-graph-sugar</a></li>
+              <li><a href="https://github.com/sbt/sbt-git">sbt-git</a></li>
+              <li><a href="https://github.com/spray/sbt-revolver">sbt-revolver</a></li>
+            </ul>
+            <p class="fragment">Define them in <code>~/.sbt/0.13/plugins/plugins.sbt</code> on your computer.</p>
+          </section>
+          <section data-transition="slide-in fade-out">
+            <h2>Project Plugins <small>use early and often</small></h2>
+            <p>They are <b>project-specific</b> so define them in <code>project/plugins.sbt</code> in your project:</p>
+            <ul>
+              <li><a href="https://github.com/scoverage/sbt-scoverage">sbt-scoverage</a></li>
+              <li><a href="https://github.com/scalastyle/scalastyle-sbt-plugin">scalastyle-sbt-plugin</a></li>
+              <li><a href="https://github.com/sbt/sbt-buildinfo">sbt-buildinfo</a></li>
+              <li><a href="https://github.com/sbt/sbt-assembly">sbt-assembly</a></li>
+              <li><a href="https://github.com/sbt/sbt-native-packager">sbt-native-packager</a></li>
+              <li><a href="https://github.com/sbt/sbt-release">sbt-release</a></li>
+            </ul>
+          </section>
+        </section>
+
+        <section id="autoplugins">
+          <h1>Auto Plugins in sbt</h1>
+        </section>
+        <section>
+          <section>
+            <h2>Auto Plugins intro</h2>
+            <ul>
+              <li>FIXME</li>
+            </ul>
           </section>
         </section>
 
