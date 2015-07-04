@@ -76,13 +76,18 @@
           <h2>Agenda</h2>
           <ul>
             <li><a href="#/core-tenets">Core tenets of sbt</a></li>
+            <li><a href="#/basics">Basics</a></li>
             <li><a href="#/sbt-shell">sbt shell</a></li>
             <li><a href="#/scala-repl">Scala REPL / console</a></li>
             <li><a href="#/settings">Settings</a></li>
             <li><a href="#/tasks">Tasks</a></li>
             <li><a href="#/projects">Projects</a></li>
-            <li><a href="#/plugins">Plugins (meta projects)</a></li>
+            <li><a href="#/meta-project">Meta Project (build of build)</a></li>
+            <li><a href="#/plugins">Plugins</a></li>
             <li><a href="#/autoplugins">Auto plugins</a></li>
+            <li><a href="#/sbt-in-play">Use case: sbt in Play Framework</a></li>
+            <li><a href="#/sbt-in-activator">Use case: sbt in Typesafe Activator</a></li>
+            <li><a href="#/credits">Credits</a></li>
           </ul>
         </section>
 
@@ -105,6 +110,23 @@
           <p><small>From <a href="https://www.typesafe.com/blog/preview-of-upcoming-sbt-10-features-read-about-the-new-plugins">Preview of upcoming sbt 1.0 features: Read about the new plugins</a></small></p>
         </section>
 
+        <section id="basics">
+          <h2>Basics</h2>
+          <ul>
+            <li>Build <b><code>extends Build</code></b> and/or uses <b><code>*.sbt</code></b> files</li>
+            <li>Builds are composed of <b><code>project</code></b>s
+              <ul>
+                <li>local (<b><code>file</code></b>) or remote (<b><code>url</code></b>)</li>
+              </ul>
+            </li>
+            <li>Projects are <b><code>Seq[Setting]</code></b></li>
+            <li>Settings are <b><code>ScopedKey</code></b>-<b><code>Initialize</code></b> pairs</li>
+          </ul>
+          <p>
+            <small>Inspired by the video <a href="https://youtu.be/V2rl62CZPVc">SBT Introduction &amp; Cookbook for Scala</a></small>
+          </p>
+        </section>
+
         <section id="sbt-shell">
           <h2>sbt shell - the prompt</h2>
           <pre><code data-trim contenteditable class="bash">
@@ -116,7 +138,7 @@ shellPrompt := { state =>
           <pre class="fragment"><code data-trim contenteditable class="bash">
 ➜  sbt-scalafortyfives  sbt
 
-[sbt-scalafortyfives]> 
+[sbt-scalafortyfives]>
           </code></pre>
         </section>
 
@@ -464,6 +486,18 @@ message in b := "message in project B"
           </section>
         </section>
 
+        <section id="meta-project">
+          <h1>Meta Project in sbt</h1>
+        </section>
+        <section>
+          <section>
+            <h2>Intro to Meta Project</h2>
+            <ul>
+              <li>FIXME</li>
+            </ul>
+          </section>
+        </section>
+
         <section id="plugins">
           <h1>Plugins in sbt</h1>
         </section>
@@ -471,15 +505,22 @@ message in b := "message in project B"
           <section>
             <h2>Plugins intro</h2>
             <ul>
-              <li>Plugins are build definition</li>
-              <li>The more you understand sbt, the stronger urge to write few plugins.</li>
+              <li><b>Plugins</b> are build definitions</li>
+              <li>A plugin <b><code>extends sbt.Plugin</code></b></li>
+              <li>A plugin can <b>add new settings</b> (and hence tasks and commands, too)
+                <ul>
+                  <li>Uses <b><code>projectSettings</code></b>, <b><code>buildSettings</code></b>, <b><code>globalSettings</code></b></li>
+                </ul>
+              </li>
+              <li><b>A plugin can depend on other plugins</b> (and automatically bring them up to a project)</li>
+              <li>The more you understand sbt, the stronger urge to write new plugins</li>
             </ul>
           </section>
           <section data-transition="slide-in fade-out">
             <h2>Global plugins <small>use early and often</small></h2>
-            <p>The plugins work across projects and don't need to be defined per project:</p>
+            <p>The following plugins work across projects and should <span class="fragment highlight-red">not</span> really be defined in a project:</p>
             <ul>
-              <li><a href="https://github.com/rtimush/sbt-updates">sbt-updates</a></li>
+              <li><a href="https://github.com/rtimush/sbt-updates">sbt-updates </a> 0.1.9</li>
               <li><a href="https://github.com/jrudolph/sbt-dependency-graph">sbt-dependency-graph</a></li>
               <li><a href="https://github.com/gilt/sbt-dependency-graph-sugar">sbt-dependency-graph-sugar</a></li>
               <li><a href="https://github.com/sbt/sbt-git">sbt-git</a></li>
@@ -497,6 +538,13 @@ message in b := "message in project B"
               <li><a href="https://github.com/sbt/sbt-assembly">sbt-assembly</a></li>
               <li><a href="https://github.com/sbt/sbt-native-packager">sbt-native-packager</a></li>
               <li><a href="https://github.com/sbt/sbt-release">sbt-release</a></li>
+              <li><a href="https://github.com/sbt/sbt-pgp">sbt-pgp</a></li>
+            </ul>
+          </section>
+          <section data-transition="slide-in fade-out">
+            <h2>Funny plugins <small>use rarely and with caution</small></h2>
+            <ul>
+              <li><a href="https://github.com/thricejamie/sbt-meow">sbt-meow</a> for viewing cat pictures</li>
             </ul>
           </section>
         </section>
@@ -506,11 +554,92 @@ message in b := "message in project B"
         </section>
         <section>
           <section>
-            <h2>Auto Plugins intro</h2>
+            <h2>Auto Plugins / natures intro</h2>
             <ul>
-              <li>FIXME</li>
+              <li><b>Auto plugin</b> is a plugin with additional features to define the defaults of a project's build definition.</li>
+              <li>Defines a group of settings and the conditions where the settings are automatically added to a build, called <b>activation</b>
+                <ul>
+                  <li><b><code>requires</code></b> and <b><code>trigger</code></b> methods</li>
+                </ul>
+              </li>
             </ul>
           </section>
+          <section>
+            <h2>Auto Plugins in the core of sbt</h2>
+            <ul>
+              <li>Default settings are grouped as   auto plugins</li>
+            </ul>
+          </section>
+          <section>
+            <h2>Auto Plugins in build.sbt</h2>
+            <ul>
+              <li><b><code>enablePlugins</code></b> to enable plugins that are not automatically added
+              <pre><code>
+                enablePlugins(...)
+              </code></pre>
+              </li>
+              <li><b><code>disablePlugins</code></b> to exclude plugins that are automatically enabled.
+              <pre><code>
+                disablePlugins(...)
+              </code></pre>
+              </li>
+            </ul>
+          </section>
+          <section>
+            <h2>Auto plugin as Scala object</h2>
+            <ul>
+              <li>An auto plugin <b><code>extends AutoPlugin</code></b></li>
+              <li><b><code>[PluginName]Plugin</code></b> is a naming convention for an auto plugin's object</li>
+              <li>Uses <b><code>projectSettings</code></b> val to specify project settings</li>
+              <li>Uses <b><code>requires</code></b> method to declare dependent plugins</li>
+              <li>Uses <b><code>trigger</code></b> method to declare whether or not to activate the auto plugin when <code>requires</code> is satisfied.</li>
+            </ul>
+          </section>
+          <section>
+            <h2>Sample Auto Plugin</h2>
+            <pre class="stretch"><code>import sbt._
+import Keys._
+
+object CommonSettingsPlugin extends AutoPlugin {
+
+  // triggered when all plugins present
+  override def trigger = allRequirements
+
+  // no plugins required (default)
+  override def requires: Plugins = empty
+
+  // settings to add to projects
+  override def projectSettings = Seq(
+    organization  := "io.deepsense",
+    version       := "0.1.0",
+    scalaVersion  := "2.11.6",
+    scalacOptions := Seq(
+      "-unchecked", "-deprecation", "-encoding", "utf8", "-feature",
+      "-language:existentials", "-language:implicitConversions"))
+}</code></pre>
+          </section>
+          <section>
+            <h2>Niceties of auto plugins</h2>
+            <ul>
+              <li>If an auto plugin's settings (and tasks) don't get added to a project's build because the plugin's requirements are not met, and a user wants to use them, sbt is able to tell why and what needs to be changed in the project's build definition.</li>
+              <li>
+                Create versioned <b>project archetypes</b> so applying settings to a project's build boils down to enabling an auto plugin.
+                <pre><code>
+      addSbtPlugin("org.company.plugins" % "web-service" % "1")
+                </code></pre>
+              </li>
+            </ul>
+          </section>
+        </section>
+
+        <section id="sbt-in-play">
+          <h1>sbt in Play</h1>
+          <h3>Use case</h3>
+        </section>
+
+        <section id="sbt-in-activator">
+          <h1>sbt in Activator</h1>
+          <h3>Use case</h3>
         </section>
 
         <section data-background-image="images/end.jpg">
@@ -524,6 +653,14 @@ message in b := "message in project B"
             - Follow <a href="https://twitter.com/jaceklaskowski">@jaceklaskowski</a> at twitter<br>
             - Use <a href="https://github.com/jaceklaskowski">Jacek's projects at GitHub</a>
           </p>
+        </section>
+
+        <section id="credits">
+          <h2>Credits</h2>
+          <ul>
+            <li><a href="https://www.typesafe.com/blog/preview-of-upcoming-sbt-10-features-read-about-the-new-plugins">Preview of upcoming sbt 1.0 features: Read about the new plugins</a></li>
+            <li><a href="https://youtu.be/V2rl62CZPVc">SBT Introduction &amp; Cookbook for Scala</a> (video)</li>
+          </ul>
         </section>
 
       </div>
